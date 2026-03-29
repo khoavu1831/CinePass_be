@@ -12,6 +12,10 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<AppDbContext>(option =>
   option.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
+// Auth
+var jwtKey = builder.Configuration["Jwt:Key"];
+builder.Services.AddAuthentication().AddJwtBearer();
+
 
 // App
 var app = builder.Build();
