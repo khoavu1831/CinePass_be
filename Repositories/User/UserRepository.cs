@@ -1,4 +1,5 @@
 using CinePass_be.Data;
+using CinePass_be.DTOS;
 using CinePass_be.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,7 +14,7 @@ public class UserRepository : IUserRepository
     _db = db;
   }
 
-  public async Task<List<User>> GetAllUsers()
+  public async Task<List<User>> GetAllUsersAsync()
   {
     return await _db.Users
       .AsNoTracking()
@@ -33,5 +34,13 @@ public class UserRepository : IUserRepository
       .AsNoTracking()
       .FirstOrDefaultAsync(u => u.Username == username);
   }
+
+  public async Task<User> CreateUserAsync(User user)
+  {
+    _db.Users.Add(user);
+    await _db.SaveChangesAsync();
+    return user;
+  }
+
 }
 
