@@ -27,7 +27,7 @@ public class AuthService : IAuthService
 
   }
 
-  public async Task<AuthResponseDto> ResigterAsync(RegisterRequestDto request)
+  public async Task<AuthResponseDto> RegisterAsync(RegisterRequestDto request)
   {
     // Valid request
     var username = request.Username;

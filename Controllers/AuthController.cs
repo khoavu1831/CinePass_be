@@ -23,14 +23,14 @@ namespace CinePass_be
                 if (!ModelState.IsValid)
                     return BadRequest("Loi: Du lieu request khong hop le. Auth Controller");
 
-                var result = _authService.ResigterAsync(request);
+                var result = await _authService.RegisterAsync(request);
                 return Ok(result);
             }
             catch (Exception ex)
             {
                 return BadRequest(new
                 {
-                    message = "Loi: LOI HE THONG!" + ex.Message
+                    message = "Loi: LOI HE THONG! | " + ex.Message
                 });
             }
         }
