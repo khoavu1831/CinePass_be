@@ -20,9 +20,6 @@ namespace CinePass_be
         {
             try
             {
-                if (!ModelState.IsValid)
-                    return BadRequest("Loi: Du lieu request khong hop le. Auth Controller");
-
                 var result = await _authService.RegisterAsync(request);
                 return Ok(result);
             }
@@ -30,7 +27,7 @@ namespace CinePass_be
             {
                 return BadRequest(new
                 {
-                    message = "Loi: LOI HE THONG! | " + ex.Message
+                    message = "Loi: " + ex.Message
                 });
             }
         }

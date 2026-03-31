@@ -35,28 +35,28 @@ public class AuthService : IAuthService
     var password = request.Password;
 
     if (string.IsNullOrWhiteSpace(username))
-      throw new Exception("Loi: Khong duoc de trong username. Auth Service");
+      throw new Exception("Khong duoc de trong username - Auth Service");
 
     if (string.IsNullOrWhiteSpace(password))
-      throw new Exception("Loi: Khong duoc de trong password. Auth Service");
+      throw new Exception("Khong duoc de trong password - Auth Service");
 
     if (string.IsNullOrWhiteSpace(email))
-      throw new Exception("Loi: Khong duoc de trong email. Auth Service");
+      throw new Exception("Khong duoc de trong email - Auth Service");
 
     var existingUsername = await _userRepository.GetByUsernameAsync(username);
     if (existingUsername != null)
-      throw new Exception("Loi: Da ton tai username. Auth Service");
+      throw new Exception("Da ton tai username - Auth Service");
 
     var existingEmail = await _userRepository.GetByEmailAsync(email);
     if (existingEmail != null)
-      throw new Exception("Loi: Da ton tai email. Auth Service");
+      throw new Exception("Da ton tai email - Auth Service");
 
     if (password.Length < 6)
-      throw new Exception("Loi: Mat khau phai >=6 ki tu. Auth Service");
+      throw new Exception("Mat khau phai >=6 ki tu - Auth Service");
 
     var emailValid = new EmailAddressAttribute();
     if (!emailValid.IsValid(email))
-      throw new Exception("Loi: Sai dinh dang email. Auth Service");
+      throw new Exception("Sai dinh dang email - Auth Service");
 
     // Hash password
     var hashedPassword = BC.HashPassword(password);

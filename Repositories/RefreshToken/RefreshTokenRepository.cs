@@ -6,7 +6,7 @@ namespace CinePass_be.Repositories;
 public class RefreshTokenRepository : IRefreshTokenRepository
 {
   private readonly AppDbContext _db;
-  
+
   public RefreshTokenRepository(AppDbContext db)
   {
     _db = db;
