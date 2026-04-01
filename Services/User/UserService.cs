@@ -87,4 +87,49 @@ public class UserService : IUserService
     };
   }
 
+  public async Task<UserResponseDto> UpdateUserAsync(int id, UpdateUserDto updateUserDto)
+  {
+    if (id <= 0 || string.IsNullOrEmpty(id.ToString()))
+      throw new Exception("Id khong hop le hoac rong - User Service");
+
+    var user = await _userRepository.GetByIdAsync(id) ??
+      throw new Exception($"Khong tim thay user co id = {id} - User Service");
+
+    if (!string.IsNullOrWhiteSpace(updateUserDto.Username))
+    {
+      user.Username = updateUserDto.Username;
+    }
+
+    if (!string.IsNullOrWhiteSpace(updateUserDto.AvatarUrl))
+    {
+      user.AvatarUrl = updateUserDto.AvatarUrl;
+    }
+
+    if (!string.IsNullOrWhiteSpace(updateUserDto.Bio))
+    {
+      if (updateUserDto.Bio.Length >= 50)
+        throw new Exception("Tieu su khong duoc vuot qua 50 ki tu - User Service");
+
+      user.Bio = updateUserDto.Bio;
+    }
+
+    user.UpdatedAt = updateUserDto.UpdatedAt;
+
+    await _userRepository.UpdateUserAsync(user);
+
+    return new UserResponseDto
+    {
+      Id = user.Id,
+      Username = user.Username,
+      Email = user.Email,
+      Bio = user.Bio,
+      AvatarUrl = user.AvatarUrl,
+      Role = user.Role,
+      IsActive = user.IsActive,
+      FollowerCount = user.FollowerCount,
+      FollowingCount = user.FollowingCount,
+      ReviewCount = user.ReviewCount,
+      UpdatedAt = user.UpdatedAt
+    };
+  }
 }
