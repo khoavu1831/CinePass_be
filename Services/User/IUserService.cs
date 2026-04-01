@@ -6,6 +6,7 @@ namespace CinePass_be.Services;
 public interface IUserService
 {
   Task<List<User>> GetAllAsync();
-  Task<User?> GetByEmailAsync(string email);
-  Task<User?> GetByUsernameAsync(string username);
+  Task<UserResponseDto> GetByIdAsync(int id);
+  Task<UserResponseDto> GetByEmailAsync(string email);
+  Task<UserResponseDto> GetByUsernameAsync(string username);
 }

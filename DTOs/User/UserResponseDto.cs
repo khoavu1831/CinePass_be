@@ -2,12 +2,12 @@ using CinePass_be.Models;
 
 namespace CinePass_be.DTOS;
 
-public class UserDto
+public class UserResponseDto
 {
   public int Id { get; set; }
   public string Username { get; set; } = string.Empty;
   public string Email { get; set; } = string.Empty;
-  public string PasswordHash { get; set; } = string.Empty;
+  // public string PasswordHash { get; set; } = string.Empty;
   public string? Bio { get; set; }
   public string? AvatarUrl { get; set; }
   public UserRole Role { get; set; } = UserRole.USER;
@@ -15,4 +15,6 @@ public class UserDto
   public int FollowerCount { get; set; } = 0;
   public int FollowingCount { get; set; } = 0;
   public int ReviewCount { get; set; } = 0;
+  public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+  public DateTime? UpdatedAt { get; set; }
 }

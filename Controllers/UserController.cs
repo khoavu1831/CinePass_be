@@ -1,3 +1,4 @@
+using CinePass_be.DTOS;
 using CinePass_be.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,7 +9,7 @@ namespace CinePass_be;
 public class UserController : ControllerBase
 {
     private readonly IUserService _userService;
-    
+
     public UserController(IUserService userService)
     {
         _userService = userService;
@@ -26,6 +27,19 @@ public class UserController : ControllerBase
         {
             return BadRequest("loi get list: " + e);
         }
-        
+    }
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetByIdAsync(int id)
+    {
+        try
+        {
+            var result = await _userService.GetByIdAsync(id);
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = "Loi: " + ex.Message });
+        }
     }
 }
