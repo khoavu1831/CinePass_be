@@ -113,7 +113,7 @@ Authorization: Bearer <access_token>
 
 ## 👤 User Endpoints
 
-### GET /users/{id}
+### GET /users/{id} (x)
 **Get user profile**
 ```http
 GET /api/users/1
