@@ -9,5 +9,5 @@ public interface IUserService
   Task<UserResponseDto> GetByIdAsync(int id);
   Task<UserResponseDto> GetByEmailAsync(string email);
   Task<UserResponseDto> GetByUsernameAsync(string username);
-  Task<UserResponseDto> UpdateUserAsync(int id, UpdateUserDto updateUserDto);
+  Task<UpdateUserResponseDto> UpdateUserAsync(int id, UpdateUserDto updateUserDto);
 }

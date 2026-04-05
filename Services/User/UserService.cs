@@ -87,7 +87,7 @@ public class UserService : IUserService
     };
   }
 
-  public async Task<UserResponseDto> UpdateUserAsync(int id, UpdateUserDto updateUserDto)
+  public async Task<UpdateUserResponseDto> UpdateUserAsync(int id, UpdateUserDto updateUserDto)
   {
     if (id <= 0)
       throw new Exception("Id khong hop le hoac rong - User Service");
@@ -97,8 +97,8 @@ public class UserService : IUserService
 
     if (!string.IsNullOrWhiteSpace(updateUserDto.Username))
     {
-      var existingUsername = await _userRepository.GetByUsernameAsync(updateUserDto.Username);
-      if (existingUsername != null)
+      var existingUser = await _userRepository.GetByUsernameAsync(updateUserDto.Username);
+      if (existingUser != null && existingUser.Id != id)
         throw new Exception("Da ton tai username nay - User Service");
 
       user.Username = updateUserDto.Username;
@@ -115,18 +115,12 @@ public class UserService : IUserService
 
     await _userRepository.UpdateUserAsync(user);
 
-    return new UserResponseDto
+    return new UpdateUserResponseDto
     {
       Id = user.Id,
       Username = user.Username,
-      Email = user.Email,
       Bio = user.Bio,
       AvatarUrl = user.AvatarUrl,
-      Role = user.Role,
-      IsActive = user.IsActive,
-      FollowerCount = user.FollowerCount,
-      FollowingCount = user.FollowingCount,
-      ReviewCount = user.ReviewCount,
       UpdatedAt = user.UpdatedAt
     };
   }
