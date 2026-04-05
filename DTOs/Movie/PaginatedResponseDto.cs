@@ -1,4 +1,4 @@
-namespace CinePass_be.DTOs.Movie;
+namespace CinePass_be.DTOs;
 
 public class PaginatedResponseDto<T>
 {

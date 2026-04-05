@@ -1,6 +1,4 @@
-using CinePass_be.Models;
-
-namespace CinePass_be.DTOS;
+namespace CinePass_be.DTOs;
 
 public class UpdateUserResponseDto
 {

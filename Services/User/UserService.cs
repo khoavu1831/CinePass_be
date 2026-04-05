@@ -1,4 +1,4 @@
-using CinePass_be.DTOS;
+using CinePass_be.DTOs;
 using CinePass_be.Models;
 using CinePass_be.Repositories;
 

@@ -1,5 +1,4 @@
-using System.Security.Claims;
-using CinePass_be.DTOS;
+using CinePass_be.DTOs;
 using CinePass_be.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

@@ -1,6 +1,5 @@
 using System.Text.Json;
-using CinePass_be.DTOs.Movie;
-using CinePass_be.DTOs.Tmdb;
+using CinePass_be.DTOs;
 using CinePass_be.Models;
 using CinePass_be.Repositories;
 using CinePass_be.Clients.Tmdb;

@@ -2,7 +2,7 @@ using System.Text.Json.Serialization;
 
 namespace CinePass_be.DTOs;
 
-public class TmdbMovieDetailsResponse
+public class TmdbMovieSearchResult
 {
     [JsonPropertyName("id")]
     public int Id { get; set; }
@@ -25,24 +25,12 @@ public class TmdbMovieDetailsResponse
     [JsonPropertyName("release_date")]
     public string? ReleaseDate { get; set; }
 
-    [JsonPropertyName("runtime")]
-    public int Runtime { get; set; }
-
-    [JsonPropertyName("genres")]
-    public List<TmdbGenre> Genres { get; set; } = [];
-
-    [JsonPropertyName("credits")]
-    public TmdbCredits? Credits { get; set; }
-
-    [JsonPropertyName("videos")]
-    public TmdbVideos? Videos { get; set; }
+    [JsonPropertyName("genre_ids")]
+    public List<int> GenreIds { get; set; } = [];
 
     [JsonPropertyName("vote_average")]
     public decimal VoteAverage { get; set; }
 
     [JsonPropertyName("vote_count")]
     public int VoteCount { get; set; }
-
-    [JsonPropertyName("original_language")]
-    public string? OriginalLanguage { get; set; }
 }

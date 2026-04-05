@@ -1,4 +1,4 @@
-using CinePass_be.DTOs.Tmdb;
+using CinePass_be.DTOs;
 
 namespace CinePass_be.Clients.Tmdb;
 
@@ -11,4 +11,5 @@ public interface ITmdbClient
     Task<TmdbSearchMovieResponse?> GetUpcomingMoviesAsync(int page = 1, string region = "US");
     Task<TmdbSearchMovieResponse?> GetMoviesByGenreAsync(int genreId, int page = 1, string sortBy = "popularity.desc");
     Task<TmdbSearchMovieResponse?> GetNowPlayingMoviesAsync(int page = 1, string region = "US");
+    Task<TmdbGenreResponse?> GetGenresAsync();
 }

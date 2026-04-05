@@ -1,4 +1,4 @@
-using CinePass_be.DTOs.Movie;
+using CinePass_be.DTOs;
 using CinePass_be.Models;
 using CinePass_be.Services;
 using Microsoft.AspNetCore.Authorization;

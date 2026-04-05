@@ -1,6 +1,5 @@
-using System.Net.Http.Json;
-using CinePass_be.DTOs.Tmdb;
-using Microsoft.Extensions.Configuration;
+using System.Net.Http.Headers;
+using CinePass_be.DTOs;
 
 namespace CinePass_be.Clients.Tmdb;
 
@@ -9,6 +8,7 @@ public class TmdbClient : ITmdbClient
     private readonly HttpClient _httpClient;
     private readonly string _apiKey;
     private readonly string _baseUrl;
+    private readonly bool _isBearerToken;
 
     public TmdbClient(HttpClient httpClient, IConfiguration configuration)
     {
@@ -18,14 +18,34 @@ public class TmdbClient : ITmdbClient
 
         if (string.IsNullOrEmpty(_apiKey))
             throw new InvalidOperationException("TMDB API key is not configured. Set 'Tmdb:Token' in appsettings.json");
+
+        _isBearerToken = _apiKey.StartsWith("eyJ");
+    }
+
+    private HttpRequestMessage CreateRequest(string url, HttpMethod? method = null)
+    {
+        var request = new HttpRequestMessage(method ?? HttpMethod.Get, url);
+
+        if (_isBearerToken)
+        {
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _apiKey);
+        }
+        else if (!url.Contains("api_key="))
+        {
+            var separator = url.Contains("?") ? "&" : "?";
+            request.RequestUri = new Uri($"{url}{separator}api_key={_apiKey}");
+        }
+
+        return request;
     }
 
     public async Task<TmdbMovieDetailsResponse?> GetMovieDetailsAsync(int tmdbId)
     {
         try
         {
-            var url = $"{_baseUrl}movie/{tmdbId}?api_key={_apiKey}&append_to_response=credits,videos";
-            var response = await _httpClient.GetAsync(url);
+            var url = $"{_baseUrl}movie/{tmdbId}?append_to_response=credits,videos";
+            var request = CreateRequest(url);
+            var response = await _httpClient.SendAsync(request);
 
             if (!response.IsSuccessStatusCode)
             {
@@ -48,8 +68,9 @@ public class TmdbClient : ITmdbClient
         try
         {
             var encodedQuery = Uri.EscapeDataString(query);
-            var url = $"{_baseUrl}search/movie?api_key={_apiKey}&query={encodedQuery}&page={page}";
-            var response = await _httpClient.GetAsync(url);
+            var url = $"{_baseUrl}search/movie?query={encodedQuery}&page={page}";
+            var request = CreateRequest(url);
+            var response = await _httpClient.SendAsync(request);
 
             if (!response.IsSuccessStatusCode)
             {
@@ -71,8 +92,9 @@ public class TmdbClient : ITmdbClient
     {
         try
         {
-            var url = $"{_baseUrl}movie/popular?api_key={_apiKey}&page={page}&region={region}";
-            var response = await _httpClient.GetAsync(url);
+            var url = $"{_baseUrl}movie/popular?page={page}&region={region}";
+            var request = CreateRequest(url);
+            var response = await _httpClient.SendAsync(request);
 
             if (!response.IsSuccessStatusCode)
                 return null;
@@ -91,8 +113,9 @@ public class TmdbClient : ITmdbClient
     {
         try
         {
-            var url = $"{_baseUrl}movie/top_rated?api_key={_apiKey}&page={page}";
-            var response = await _httpClient.GetAsync(url);
+            var url = $"{_baseUrl}movie/top_rated?page={page}";
+            var request = CreateRequest(url);
+            var response = await _httpClient.SendAsync(request);
 
             if (!response.IsSuccessStatusCode)
                 return null;
@@ -111,8 +134,9 @@ public class TmdbClient : ITmdbClient
     {
         try
         {
-            var url = $"{_baseUrl}movie/upcoming?api_key={_apiKey}&page={page}&region={region}";
-            var response = await _httpClient.GetAsync(url);
+            var url = $"{_baseUrl}movie/upcoming?page={page}&region={region}";
+            var request = CreateRequest(url);
+            var response = await _httpClient.SendAsync(request);
 
             if (!response.IsSuccessStatusCode)
                 return null;
@@ -131,8 +155,9 @@ public class TmdbClient : ITmdbClient
     {
         try
         {
-            var url = $"{_baseUrl}discover/movie?api_key={_apiKey}&with_genres={genreId}&page={page}&sort_by={sortBy}";
-            var response = await _httpClient.GetAsync(url);
+            var url = $"{_baseUrl}discover/movie?with_genres={genreId}&page={page}&sort_by={sortBy}";
+            var request = CreateRequest(url);
+            var response = await _httpClient.SendAsync(request);
 
             if (!response.IsSuccessStatusCode)
                 return null;
@@ -151,8 +176,9 @@ public class TmdbClient : ITmdbClient
     {
         try
         {
-            var url = $"{_baseUrl}movie/now_playing?api_key={_apiKey}&page={page}&region={region}";
-            var response = await _httpClient.GetAsync(url);
+            var url = $"{_baseUrl}movie/now_playing?page={page}&region={region}";
+            var request = CreateRequest(url);
+            var response = await _httpClient.SendAsync(request);
 
             if (!response.IsSuccessStatusCode)
                 return null;
@@ -163,6 +189,31 @@ public class TmdbClient : ITmdbClient
         catch (Exception ex)
         {
             Console.WriteLine($"Error fetching now playing movies: {ex.Message}");
+            return null;
+        }
+    }
+
+    public async Task<TmdbGenreResponse?> GetGenresAsync()
+    {
+        try
+        {
+            var url = $"{_baseUrl}genre/movie/list?language=en-US";
+
+            var request = CreateRequest(url);
+            var response = await _httpClient.SendAsync(request);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                return null;
+            }
+
+            var result = await response.Content.ReadFromJsonAsync<TmdbGenreResponse>();
+            return result;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error when fetching genres: {ex.Message} - {ex.StackTrace}");
             return null;
         }
     }

@@ -1,5 +1,4 @@
-using CinePass_be.DTOs.Movie;
-using CinePass_be.DTOs.Tmdb;
+using CinePass_be.DTOs;
 
 namespace CinePass_be.Services;
 

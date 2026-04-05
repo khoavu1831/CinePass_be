@@ -1,4 +1,3 @@
-using CinePass_be.DTOs.Movie;
 using CinePass_be.Services;
 using Microsoft.AspNetCore.Mvc;
 

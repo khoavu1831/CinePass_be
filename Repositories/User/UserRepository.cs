@@ -1,5 +1,4 @@
 using CinePass_be.Data;
-using CinePass_be.DTOS;
 using CinePass_be.Models;
 using Microsoft.EntityFrameworkCore;
 
