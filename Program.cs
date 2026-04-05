@@ -1,8 +1,11 @@
 using System.Text;
+using CinePass_be.Authorization;
 using CinePass_be.Data;
 using CinePass_be.Repositories;
 using CinePass_be.Services;
+using CinePass_be.Clients.Tmdb;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -39,17 +42,29 @@ builder.Services
     };
   });
 
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(options =>
+{
+  options.AddPolicy("SelfOnly", policy => policy.Requirements.Add(new SelfRequirement()));
+});
 
 // DI
+// DI - Auth
+builder.Services.AddSingleton<IAuthorizationHandler, SelfHandler>();
+builder.Services.AddSingleton<IAuthorizationMiddlewareResultHandler, CustomAuthorizationMiddlewareResultHandler>();
+
 // DI - Repositories
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+builder.Services.AddScoped<IMovieRepository, MovieRepository>();
 
 // DI - Services
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IMovieService, MovieService>();
 builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+
+// DI - HttpClient and Tmdb
+builder.Services.AddHttpClient<ITmdbClient, TmdbClient>();
 
 // Swagger
 builder.Services.AddEndpointsApiExplorer();

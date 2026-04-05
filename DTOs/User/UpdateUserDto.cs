@@ -1,4 +1,4 @@
-namespace CinePass_be;
+namespace CinePass_be.DTOs;
 
 public class UpdateUserDto
 {

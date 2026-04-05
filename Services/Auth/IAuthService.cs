@@ -1,4 +1,4 @@
-using CinePass_be.DTOS;
+using CinePass_be.DTOs;
 
 namespace CinePass_be.Services;
 

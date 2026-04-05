@@ -1,6 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-using System.IdentityModel.Tokens.Jwt;
-using CinePass_be.DTOS;
+using CinePass_be.DTOs;
 using CinePass_be.Helper;
 using CinePass_be.Models;
 using CinePass_be.Repositories;

@@ -1,4 +1,4 @@
-using CinePass_be.DTOS;
+using CinePass_be.DTOs;
 using CinePass_be.Models;
 using CinePass_be.Repositories;
 
@@ -87,9 +87,9 @@ public class UserService : IUserService
     };
   }
 
-  public async Task<UserResponseDto> UpdateUserAsync(int id, UpdateUserDto updateUserDto)
+  public async Task<UpdateUserResponseDto> UpdateUserAsync(int id, UpdateUserDto updateUserDto)
   {
-    if (id <= 0 || string.IsNullOrEmpty(id.ToString()))
+    if (id <= 0)
       throw new Exception("Id khong hop le hoac rong - User Service");
 
     var user = await _userRepository.GetByIdAsync(id) ??
@@ -97,42 +97,30 @@ public class UserService : IUserService
 
     if (!string.IsNullOrWhiteSpace(updateUserDto.Username))
     {
-      var existingUsername = await _userRepository.GetByUsernameAsync(updateUserDto.Username);
-      if (existingUsername != null)
+      var existingUser = await _userRepository.GetByUsernameAsync(updateUserDto.Username);
+      if (existingUser != null && existingUser.Id != id)
         throw new Exception("Da ton tai username nay - User Service");
 
       user.Username = updateUserDto.Username;
     }
 
-    if (!string.IsNullOrWhiteSpace(updateUserDto.AvatarUrl))
-    {
-      user.AvatarUrl = updateUserDto.AvatarUrl;
-    }
+    user.AvatarUrl = string.IsNullOrWhiteSpace(updateUserDto.AvatarUrl ?? user.AvatarUrl) ? null : updateUserDto.AvatarUrl;
 
-    if (!string.IsNullOrWhiteSpace(updateUserDto.Bio))
-    {
-      if (updateUserDto.Bio.Length >= 50)
-        throw new Exception("Tieu su khong duoc vuot qua 50 ki tu - User Service");
+    if (!string.IsNullOrWhiteSpace(updateUserDto.Bio) && updateUserDto.Bio?.Length > 50)
+      throw new Exception("Tieu su khong duoc vuot qua 50 ki tu - User Service");
 
-      user.Bio = updateUserDto.Bio;
-    }
+    user.Bio = string.IsNullOrWhiteSpace(updateUserDto.Bio) ? null : updateUserDto.Bio;
 
     user.UpdatedAt = updateUserDto.UpdatedAt;
 
     await _userRepository.UpdateUserAsync(user);
 
-    return new UserResponseDto
+    return new UpdateUserResponseDto
     {
       Id = user.Id,
       Username = user.Username,
-      Email = user.Email,
       Bio = user.Bio,
       AvatarUrl = user.AvatarUrl,
-      Role = user.Role,
-      IsActive = user.IsActive,
-      FollowerCount = user.FollowerCount,
-      FollowingCount = user.FollowingCount,
-      ReviewCount = user.ReviewCount,
       UpdatedAt = user.UpdatedAt
     };
   }
